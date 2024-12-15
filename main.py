@@ -19,7 +19,11 @@ def download_video() -> None :
     directory = directory_var.get()
     if (not url) or (not directory) :
         messagebox.showerror("Error", "Please enter a video link and directory.") ; return
-    ydl_opts = {'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'), }
+    ydl_opts = {
+    'format': 'bestvideo[height<=1080]+bestaudio/best',
+    'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'),
+    'postprocessors': [],
+}
     try :
         with yt_dlp.YoutubeDL(ydl_opts) as ydl :
             ydl.download([url])
