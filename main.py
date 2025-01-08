@@ -20,10 +20,13 @@ def download_video() -> None :
     if (not url) or (not directory) :
         messagebox.showerror("Error", "Please enter a video link and directory.") ; return
     ydl_opts = {
-    'format': 'bestvideo[height<=1080]+bestaudio/best',
-    'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'),
-    'postprocessors': [],
-}
+        'format': 'bestvideo[height<=1080]+bestaudio/best',  # Download best video up to 1080p and best audio
+        'merge_output_format': 'mp4',  # Merge video and audio into an MP4 file
+        'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'),  # Output filename template
+    }
+    
+    # make a python script using yt_dlp to download a video from a specified link in 1080p quality
+    
     try :
         with yt_dlp.YoutubeDL(ydl_opts) as ydl :
             ydl.download([url])
