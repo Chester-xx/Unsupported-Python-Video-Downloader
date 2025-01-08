@@ -25,7 +25,7 @@ def download_video() -> None :
         'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'),  # Output filename template
     }
     
-    # make a python script using yt_dlp to download a video from a specified link in 1080p quality
+    # update code -> opts
     
     try :
         with yt_dlp.YoutubeDL(ydl_opts) as ydl :
