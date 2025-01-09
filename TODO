@@ -1,0 +1,21 @@
+First Build
+-------------
+Doesnt work properly with subprocesses and threading
+In order to fix this, have to use the yt-dlp python library instead of the exe
+
+Both methods need ffmpeg installed ! ! 
+
+1. Need to add ffmpeg/bin to windows environment system variables using python
+2. Need to download ffmpeg build to Main drive
+
+
+
+Second Build
+-------------
+Brainfuck but allows me to add the functionality of alerting the user of the status of downloads
+In order for this to work subprocesses and threading needs to be used with the exe build of yt-dlp
+
+1. Download yt-dlp.exe to Main drive, likely under vtemp folder where the dir is already installed
+2. Use different method of command lining the download
+3. Download ffmpeg build to Main drive
+4. Add ffmpeg/bin to windows environment system variables

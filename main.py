@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import yt_dlp
 import json
+
 # gets the users chosen directory and dumps it to a "temp" json
 def get_dir() -> None :
     dir = filedialog.askdirectory()
@@ -15,26 +16,35 @@ def get_dir() -> None :
                 json.dump({"dir" : dir}, json_f)
 # gets url and pipes yt-dlp to download video over internet
 def download_video() -> None :
-    url = url_entry.get()
-    directory = directory_var.get()
-    if (not url) or (not directory) :
-        messagebox.showerror("Error", "Please enter a video link and directory.") ; return
-    ydl_opts = {
-        'format': 'bestvideo[height<=1080]+bestaudio/best',  # Download best video up to 1080p and best audio
-        'merge_output_format': 'mp4',  # Merge video and audio into an MP4 file
-        'outtmpl': os.path.join(directory, '%(title)s.%(ext)s'),  # Output filename template
-    }
+    url = url_entry.get() ; directory = directory_var.get() ; Err : str = "" ; c_url : bool = False ; c_dir : bool = False
+    if (not url) : c_url = bool(True)
+    if (not directory) : c_dir = bool(True)
+    match (c_url, c_dir) :
+        case (True, True) : Err = "Please enter a valid link and select a folder."
+        case (False, False) : Err = ""
+        case (True, False) : Err = "Please enter a valid link."
+        case (False, True) : Err = "Please select a folder."   
+    if Err != "" :
+        messagebox.showerror("Error", Err) ; return
     
-    # update code -> opts
+    status_label.configure(text = "Please Wait...")
+    status_label.update_idletasks()
+    
+    ydl_opts = {'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]', 'outtmpl': os.path.join(directory, '%(title)s.mp4'), 'postprocessors': [{'key': 'FFmpegVideoConvertor', 'preferedformat': 'mp4', }], }
     
     try :
         with yt_dlp.YoutubeDL(ydl_opts) as ydl :
             ydl.download([url])
+            status_label.configure(text = "")
+            status_label.update_idletasks()
         messagebox.showinfo("Success", "Video downloaded successfully!")
     except Exception as E :
         messagebox.showerror("Error", f"An error occurred: {str(E)}")
+        status_label.configure(text = "")
+        status_label.update_idletasks()
+
 # root init
-r = tk.Tk() ; r.title("Video Downloader") ; r.geometry("400x250") ; r.configure(bg = "#181818")
+r = tk.Tk() ; r.title("Video Downloader") ; r.geometry("400x260") ; r.configure(bg = "#181818")
 # dir storage and file presence check
 directory_var = tk.StringVar()
 path = os.path.join("C:\\", "vtemp", "dir.json")
@@ -50,10 +60,12 @@ else :
 # objects
 url_label = tk.Label(r, text = "Video URL:") ; url_label.pack(pady = 5) ; url_entry = tk.Entry(r, width = 50) ; url_entry.pack(pady = 5)
 url_label.configure(fg = "#FFFFFF", bg = "#181818") ; url_entry.configure(fg = "#FFFFFF", bg = "#282828")
-directory_button = tk.Button(r, text = "Select Directory", command = lambda : get_dir()) ; directory_button.pack(pady = 20)
+directory_button = tk.Button(r, text = "Select Folder", command = lambda : get_dir()) ; directory_button.pack(pady = 20)
 directory_button.configure(fg = "#FFFFFF", bg = "#282828")
 directory_label = tk.Label(r, textvariable = directory_var) ; directory_label.pack(pady = 5)
 directory_label.configure(fg = "#FFFFFF", bg = "#181818")
 download_button = tk.Button(r, text = "Download Video", command = lambda : download_video(), width = 42, height = 2) ; download_button.pack(pady = 20)
 download_button.configure(fg = "#FFFFFF", bg = "#282828")
+status_label = tk.Label(r, text = "") ; status_label.pack()
+status_label.configure(fg = "#ce0000", bg = "#181818")
 r.mainloop()
