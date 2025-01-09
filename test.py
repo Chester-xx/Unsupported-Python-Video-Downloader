@@ -15,6 +15,7 @@ from tkinter import filedialog, messagebox
 import json
 import sys
 import subprocess
+import threading
 
 # stdout/Terminal output of yt-dlp to tkinter label
 class stdout :
@@ -55,16 +56,36 @@ def download_video() -> None :
         url
     ]
 
-    try:
-        result = subprocess.run(ydl_opts, capture_output=True, text=True, check=True)
+    threading.Thread(target=run_subprocess, args=(ydl_opts,)).start()
+
+def run_subprocess(ydl_opts):
+    process = subprocess.Popen(ydl_opts, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    # Read output line by line
+    for stdout_line in iter(process.stdout.readline, ""):
+        if stdout_line:
+            print(stdout_line.strip())
+            status : str = ""
+            if stdout_line.strip().__len__() < 100 : status = stdout_line.strip()
+            else : status = stdout_line.strip()[:80]
+            status_label.config(text = status)
+            status_label.update_idletasks()
+
+    process.stdout.close()
+    process.wait()
+
+    # Check for errors
+    if process.returncode == 0:
+        status_label.config(text = "")
+        status_label.update_idletasks()
         messagebox.showinfo("Success", "Video downloaded successfully!")
-        print(result.stdout)
-    except subprocess.CalledProcessError as e:
-        messagebox.showerror("Error", f"An error occurred: {e.stderr.strip()}")
-        
+    else:
+        status_label.config(text = "")
+        status_label.update_idletasks()
+        messagebox.showerror("Error", "An error occurred during download.")
 
 # root init
-r = tk.Tk() ; r.title("Video Downloader") ; r.geometry("400x260") ; r.configure(bg = "#181818")
+r = tk.Tk() ; r.title("Video Downloader") ; r.geometry("475x260") ; r.configure(bg = "#181818")
 # dir storage and file presence check
 directory_var = tk.StringVar()
 path = os.path.join("C:\\", "vtemp", "dir.json")
