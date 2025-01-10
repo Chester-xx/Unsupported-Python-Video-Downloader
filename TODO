@@ -1,14 +1,9 @@
-First Build
+First Build - Complete
 -------------
 Doesnt work properly with subprocesses and threading
 In order to fix this, have to use the yt-dlp python library instead of the exe
 
 Both methods need ffmpeg installed ! ! 
-
-1. Need to add ffmpeg/bin to windows environment system variables using python
-2. Need to download ffmpeg build to Main drive
-
-
 
 Second Build
 -------------
