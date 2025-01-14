@@ -78,7 +78,7 @@ def download_video() -> None :
         case (False, True) : Err = "Please select a folder."   
     if Err != "" :
         messagebox.showerror("Error", Err) ; return
-    status_label.configure(text = "Please Wait...")
+    status_label.configure(text = "Please Wait... If your video is large, this will take a long time.")
     status_label.update_idletasks()
     ydl_opts = {'format': 'bestvideo[height<=1080]+bestaudio/best[height<=1080]', 'outtmpl': os.path.join(directory, '%(title)s.mp4'), 'postprocessors': [{'key': 'FFmpegVideoConvertor', 'preferedformat': 'mp4', }], }
     try :
