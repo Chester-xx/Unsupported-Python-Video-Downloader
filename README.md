@@ -1,8 +1,9 @@
-[YTVD.exe]
+[Video-Downloader.exe]
 --------------------------------------------------------------------------------------
-Program has been compiled from Python to binary using auto-py-to-exe [YTVD.exe]
-This is a very old and poor version, only downloads in 144p.
-Running the executable does not require any install or extra knowledge to use.
+Program has been compiled from Python to binary using auto-py-to-exe [Video-Downloader.exe]
+Updated version now downloads videos in 1080p / HD quality.
+Running the executable requires 7-zip to be installed previously on the system.
+This is to unpack the dependancies that are installed.
 --------------------------------------------------------------------------------------
 
 [main-essential-build.py]
